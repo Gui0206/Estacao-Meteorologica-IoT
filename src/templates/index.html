@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Painel - Estacao Meteorologica{% endblock %}
+
+{% block content %}
+<h1>Painel Principal</h1>
+
+<!-- Cards de estatísticas -->
+<div class="stats-grid">
+    <div class="stat-card temp">
+        <h3>Temperatura</h3>
+        <div class="stat-value" id="temp-media">{{ stats.temp_media if stats.temp_media is not none else '--' }}&#176;C</div>
+        <div class="stat-range">
+            Min: {{ stats.temp_min if stats.temp_min is not none else '--' }}&#176;C |
+            Max: {{ stats.temp_max if stats.temp_max is not none else '--' }}&#176;C
+        </div>
+    </div>
+    <div class="stat-card umid">
+        <h3>Umidade</h3>
+        <div class="stat-value" id="umid-media">{{ stats.umid_media if stats.umid_media is not none else '--' }}%</div>
+        <div class="stat-range">
+            Min: {{ stats.umid_min if stats.umid_min is not none else '--' }}% |
+            Max: {{ stats.umid_max if stats.umid_max is not none else '--' }}%
+        </div>
+    </div>
+    <div class="stat-card press">
+        <h3>Pressao</h3>
+        <div class="stat-value" id="press-media">{{ stats.press_media if stats.press_media is not none else '--' }} hPa</div>
+        <div class="stat-range">
+            Min: {{ stats.press_min if stats.press_min is not none else '--' }} hPa |
+            Max: {{ stats.press_max if stats.press_max is not none else '--' }} hPa
+        </div>
+    </div>
+    <div class="stat-card total">
+        <h3>Total de Leituras</h3>
+        <div class="stat-value">{{ stats.total }}</div>
+    </div>
+</div>
+
+<!-- Gráfico de variação temporal -->
+<div class="chart-container">
+    <h2>Variacao Temporal</h2>
+    <canvas id="grafico-temporal"></canvas>
+</div>
+
+<!-- Tabela das últimas leituras -->
+<div class="section">
+    <div class="section-header">
+        <h2>Ultimas Leituras</h2>
+        <button id="btn-atualizar" class="btn btn-primary" onclick="atualizarDados()">Atualizar</button>
+    </div>
+    <div class="table-wrapper">
+        <table id="tabela-leituras">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Temperatura</th>
+                    <th>Umidade</th>
+                    <th>Pressao</th>
+                    <th>Local</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for l in leituras %}
+                <tr>
+                    <td>{{ l.id }}</td>
+                    <td>{{ l.temperatura }}&#176;C</td>
+                    <td>{{ l.umidade }}%</td>
+                    <td>{{ l.pressao if l.pressao else '--' }} hPa</td>
+                    <td>{{ l.localizacao }}</td>
+                    <td>{{ l.timestamp }}</td>
+                </tr>
+                {% endfor %}
+                {% if not leituras %}
+                <tr><td colspan="6" class="empty">Nenhuma leitura registrada.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<script>
+    // Dados iniciais para o gráfico
+    const leiturasIniciais = {{ leituras | tojson }};
+    inicializarGrafico(leiturasIniciais.reverse());
+</script>
+{% endblock %}
