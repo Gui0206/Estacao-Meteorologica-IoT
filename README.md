@@ -4,7 +4,7 @@ Sistema de medicao de estacao meteorologica IoT desenvolvido para o Modulo 5 de 
 
 ## Decisoes de Arquitetura
 
-- **Simulacao em Python**: como nao ha hardware fisico disponivel, o Arduino e os sensores sao substituidos por um **simulador Python** (`simulador.py`) que gera dados realistas de temperatura, umidade e pressao atmosferica com variacao senoidal ao longo do dia.
+- **Simulacao em Python**: Ao invés de usar um protótipo físico,, o Arduino e os sensores foram substituidos por um **simulador Python** (`simulador.py`) que gera dados realistas de temperatura, umidade e pressao atmosferica com variacao senoidal ao longo do dia.
 - **Sketch Arduino incluso**: o arquivo `arduino/estacao.ino` esta incluido como referencia para uso com hardware real (Arduino Uno + DHT11).
 - **Leitura serial disponivel**: o script `serial_reader.py` esta pronto para uso com hardware real, lendo dados JSON da porta serial e enviando via POST para a API.
 - **Arquitetura mantida**: Flask + SQLite + Jinja2 conforme especificado, com WAL mode para suportar escritas concorrentes do simulador e da API.
